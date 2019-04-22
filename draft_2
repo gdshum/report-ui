@@ -26,6 +26,7 @@ import javafx.stage.Stage;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.ScrollPane;
 
 /**
  *
@@ -47,7 +48,7 @@ public class Fitnessreport extends Application {
     final static String deadlift = "Deadlift";
     final static String ohp = "Overhead Press";
     final static String militarypress = "Military Press";
-    
+
     @Override
     public void start(Stage primaryStage) {
 
@@ -56,6 +57,11 @@ public class Fitnessreport extends Application {
 
         // root element
         VBox rootPane = new VBox();
+        
+        // set grid pane (navigation)
+        GridPane navigationbar = new GridPane();
+        navigationbar.setHgap(10);
+        navigationbar.setVgap(10);
 
         // set grid pane (fitness analysis + comments)
         GridPane grid = new GridPane();
@@ -64,28 +70,24 @@ public class Fitnessreport extends Application {
         grid.setVgap(5);
         grid.setPadding(new Insets(25, 25, 25, 25));
 
-        // set grid pane (navigation)
-        GridPane navigationbar = new GridPane();
-        navigationbar.setHgap(10);
-        navigationbar.setVgap(10);
-
-        // navigation grid
+        // navigation grid - buttons
         Button homeBar = new Button("Home");
         homeBar.setAlignment(Pos.TOP_LEFT);
-        navigationbar.add(homeBar, 0, 1);
-        
+        navigationbar.add(homeBar, 10, 1);
+        homeBar.setStyle("-fx-background-color: transparent;");
+
         Button monthlyReport = new Button("Monthly Report");
         monthlyReport.setAlignment(Pos.TOP_CENTER);
-        navigationbar.add(monthlyReport, 30, 1);
-
-
+        navigationbar.add(monthlyReport, 40, 1);
+        monthlyReport.setStyle("-fx-background-color: transparent;");
+        
         Button myProfile = new Button("My Profile");
         myProfile.setAlignment(Pos.TOP_RIGHT);
-        navigationbar.add(myProfile, 60, 1);
-        
-        navigationbar.setStyle("-fx-background-color: transparent;");
+        navigationbar.add(myProfile, 65, 1);
+        myProfile.setStyle("-fx-background-color: transparent;");
 
-
+        // change navigation background color
+        navigationbar.setStyle("-fx-background-color: gold;");
 
         // labels & fields
         // section 1: Overall Health
@@ -117,6 +119,13 @@ public class Fitnessreport extends Application {
 
         TextField foodConditionBox = new TextField();
         grid.add(foodConditionBox, 1, 4);
+        
+        // assess button
+        Button btn = new Button("Assess");
+        HBox assess = new HBox(10);
+        assess.setAlignment(Pos.BOTTOM_RIGHT);
+        assess.getChildren().add(btn);
+        grid.add(assess, 1, 5);
 
         // section 2: Expert Comments
         Text expertTitle = new Text("Expert Comments");
@@ -137,18 +146,39 @@ public class Fitnessreport extends Application {
         TextField healthExpertBox = new TextField();
         grid.add(healthExpertBox, 1, 9);
         String healthComments = healthExpertBox.getText();
+        
+        // (+) button for expert comments
+         /*
+        int num_comments = 2;
+        for (int i = 1; i < num_comments; i++) {
+            grid.add(new Label (""+i), 0, i);
+            grid.add( new TextField(), 1, i);
+            grid.add( new TextField(), 2, i);
+        }
+        
+        Button addComments = new Button ("+ comments");
+        grid.add(addComments, 0, num_comments);
 
+        
+        //addComments.setAlignment(Pos.BOTTOM_RIGHT);
+        
+        addComments.setOnAction (e -> {
+            int row = grid.getRowIndex(addComments) + 1;
+            
+            
+            
+            // add rows of text fields
+            row--;
+            grid.add(new Label("" + row), 0, row);
+            grid.add(new TextField(), 1, row);
+            grid.add(new TextField(), 2, row);
+        
+        });
+        */
         //background colors
         grid.setStyle("-fx-background-color: gold;");
-
-        //buttons
-        Button btn = new Button("Assess");
-        HBox hbBtn = new HBox(10);
-        hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
-        hbBtn.getChildren().add(btn);
-        grid.add(hbBtn, 1, 5);
-
-        //bar chart
+        
+        // bar chart
         final CategoryAxis xAxis = new CategoryAxis();
         final NumberAxis yAxis = new NumberAxis();
         final BarChart<String, Number> barchart
@@ -190,7 +220,6 @@ public class Fitnessreport extends Application {
 
         lineChart.setTitle("Overall Health Peformance, 2019");
         yAxis1.setLabel("Frequency");
-
 
         XYChart.Series sleep1 = new XYChart.Series();
         sleep1.setName("Sleep");
@@ -241,15 +270,14 @@ public class Fitnessreport extends Application {
         lineChart.getData().addAll(sleep1, exercise1, foodcondition1);
 
         //important Root element for VBox
-        rootPane.getChildren().addAll(navigationbar, grid, barchart, lineChart); 
-        
+        rootPane.getChildren().addAll(navigationbar, grid, barchart, lineChart);
+
         // important Root element for BorderPane
         //rootPane.setLeft(grid);
         //rootPane.setRight(bc);
         //rootPane.setRight(lineChart);
-        
         // show the stage   
-        Scene scene = new Scene(rootPane);
+        Scene scene = new Scene(rootPane, 1000, 1000);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
