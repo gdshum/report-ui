@@ -1,0 +1,256 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package fitnessreport;
+
+import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
+
+/**
+ *
+ * @author ShumPC
+ */
+public class Fitnessreport extends Application {
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+
+    // fill colors for GUI
+    private static final Color COLOR_EMPTY = Color.rgb(238, 228, 2);
+    private static final Color COLOR_2 = Color.rgb(255, 202, 195);
+
+    // string list for bar chart
+    final static String squat = "Squat";
+    final static String bench = "Bench";
+    final static String deadlift = "Deadlift";
+    final static String ohp = "Overhead Press";
+    final static String militarypress = "Military Press";
+    
+    @Override
+    public void start(Stage primaryStage) {
+
+        // set title
+        primaryStage.setTitle("Fitness Report");
+
+        // root element
+        VBox rootPane = new VBox();
+
+        // set grid pane (fitness analysis + comments)
+        GridPane grid = new GridPane();
+        grid.setAlignment(Pos.CENTER);
+        grid.setHgap(5);
+        grid.setVgap(5);
+        grid.setPadding(new Insets(25, 25, 25, 25));
+
+        // set grid pane (navigation)
+        GridPane navigationbar = new GridPane();
+        navigationbar.setHgap(10);
+        navigationbar.setVgap(10);
+
+        // navigation grid
+        Button homeBar = new Button("Home");
+        homeBar.setAlignment(Pos.TOP_LEFT);
+        navigationbar.add(homeBar, 0, 1);
+        
+        Button monthlyReport = new Button("Monthly Report");
+        monthlyReport.setAlignment(Pos.TOP_CENTER);
+        navigationbar.add(monthlyReport, 30, 1);
+
+
+        Button myProfile = new Button("My Profile");
+        myProfile.setAlignment(Pos.TOP_RIGHT);
+        navigationbar.add(myProfile, 60, 1);
+        
+        navigationbar.setStyle("-fx-background-color: transparent;");
+
+
+
+        // labels & fields
+        // section 1: Overall Health
+        Text welcome = new Text("Welcome");
+        welcome.setFont(Font.font("Arial", FontWeight.BOLD,
+                FontPosture.REGULAR, 25));
+        grid.add(welcome, 0, 0, 1, 1);
+
+        Text overallHealthTitle = new Text("Overall Health");
+        overallHealthTitle.setId("welcome-text");
+        overallHealthTitle.setFont(Font.font("Arial", FontWeight.BOLD,
+                FontPosture.REGULAR, 14));
+        grid.add(overallHealthTitle, 0, 1, 2, 1);
+
+        Label sleep = new Label("Sleep (hours/week)");
+        grid.add(sleep, 0, 2);
+
+        TextField userTextField = new TextField();
+        grid.add(userTextField, 1, 2);
+
+        Label exercise = new Label("Exercise (steps/week)");
+        grid.add(exercise, 0, 3);
+
+        TextField pwBox = new TextField();
+        grid.add(pwBox, 1, 3);
+
+        Label foodCondition = new Label("Food Condition (calories/week)");
+        grid.add(foodCondition, 0, 4);
+
+        TextField foodConditionBox = new TextField();
+        grid.add(foodConditionBox, 1, 4);
+
+        // section 2: Expert Comments
+        Text expertTitle = new Text("Expert Comments");
+        expertTitle.setId("comments-text");
+        expertTitle.setFont(Font.font("Arial", FontWeight.BOLD,
+                FontPosture.REGULAR, 14));
+        grid.add(expertTitle, 0, 6, 1, 2);
+
+        Label fitnessInstructor = new Label("Fitness Instructor Comments");
+        grid.add(fitnessInstructor, 0, 8);
+
+        TextField fitnessInstructorBox = new TextField();
+        grid.add(fitnessInstructorBox, 0, 9);
+
+        Label healthExpert = new Label("Health Expert Comments");
+        grid.add(healthExpert, 1, 8);
+
+        TextField healthExpertBox = new TextField();
+        grid.add(healthExpertBox, 1, 9);
+        String healthComments = healthExpertBox.getText();
+
+        //background colors
+        grid.setStyle("-fx-background-color: gold;");
+
+        //buttons
+        Button btn = new Button("Assess");
+        HBox hbBtn = new HBox(10);
+        hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
+        hbBtn.getChildren().add(btn);
+        grid.add(hbBtn, 1, 5);
+
+        //bar chart
+        final CategoryAxis xAxis = new CategoryAxis();
+        final NumberAxis yAxis = new NumberAxis();
+        final BarChart<String, Number> barchart
+                = new BarChart<String, Number>(xAxis, yAxis);
+        barchart.setTitle("Exercise Summary");
+        yAxis.setLabel("Frequency (month)");
+
+        XYChart.Series april = new XYChart.Series();
+        april.setName("April");
+        april.getData().add(new XYChart.Data(squat, 12));
+        april.getData().add(new XYChart.Data(bench, 10));
+        april.getData().add(new XYChart.Data(deadlift, 13));
+        april.getData().add(new XYChart.Data(ohp, 8));
+        april.getData().add(new XYChart.Data(militarypress, 9));
+
+        XYChart.Series may = new XYChart.Series();
+        may.setName("May");
+        may.getData().add(new XYChart.Data(squat, 7));
+        may.getData().add(new XYChart.Data(bench, 19));
+        may.getData().add(new XYChart.Data(deadlift, 10));
+        may.getData().add(new XYChart.Data(ohp, 16));
+        may.getData().add(new XYChart.Data(militarypress, 17));
+
+        XYChart.Series june = new XYChart.Series();
+        june.setName("June");
+        june.getData().add(new XYChart.Data(squat, 14));
+        june.getData().add(new XYChart.Data(bench, 13));
+        june.getData().add(new XYChart.Data(deadlift, 18));
+        june.getData().add(new XYChart.Data(ohp, 11));
+        june.getData().add(new XYChart.Data(militarypress, 18));
+
+        barchart.getData().addAll(april, may, june);
+
+        // line chart
+        final CategoryAxis xAxis1 = new CategoryAxis();
+        final NumberAxis yAxis1 = new NumberAxis();
+        final LineChart<String, Number> lineChart
+                = new LineChart<>(xAxis1, yAxis1);
+
+        lineChart.setTitle("Overall Health Peformance, 2019");
+        yAxis1.setLabel("Frequency");
+
+
+        XYChart.Series sleep1 = new XYChart.Series();
+        sleep1.setName("Sleep");
+
+        sleep1.getData().add(new XYChart.Data("Jan", 23));
+        sleep1.getData().add(new XYChart.Data("Feb", 26));
+        sleep1.getData().add(new XYChart.Data("Mar", 28));
+        sleep1.getData().add(new XYChart.Data("Apr", 30));
+        sleep1.getData().add(new XYChart.Data("May", 35));
+        sleep1.getData().add(new XYChart.Data("Jun", 38));
+        sleep1.getData().add(new XYChart.Data("Jul", 42));
+        sleep1.getData().add(new XYChart.Data("Aug", 40));
+        sleep1.getData().add(new XYChart.Data("Sep", 46));
+        sleep1.getData().add(new XYChart.Data("Oct", 50));
+        sleep1.getData().add(new XYChart.Data("Nov", 55));
+        sleep1.getData().add(new XYChart.Data("Dec", 57));
+
+        XYChart.Series exercise1 = new XYChart.Series();
+        exercise1.setName("Exercise");
+        exercise1.getData().add(new XYChart.Data("Jan", 15));
+        exercise1.getData().add(new XYChart.Data("Feb", 20));
+        exercise1.getData().add(new XYChart.Data("Mar", 34));
+        exercise1.getData().add(new XYChart.Data("Apr", 27));
+        exercise1.getData().add(new XYChart.Data("May", 26));
+        exercise1.getData().add(new XYChart.Data("Jun", 30));
+        exercise1.getData().add(new XYChart.Data("Jul", 32));
+        exercise1.getData().add(new XYChart.Data("Aug", 35));
+        exercise1.getData().add(new XYChart.Data("Sep", 40));
+        exercise1.getData().add(new XYChart.Data("Oct", 42));
+        exercise1.getData().add(new XYChart.Data("Nov", 44));
+        exercise1.getData().add(new XYChart.Data("Dec", 42));
+
+        XYChart.Series foodcondition1 = new XYChart.Series();
+        foodcondition1.setName("Food Condition");
+        foodcondition1.getData().add(new XYChart.Data("Jan", 35));
+        foodcondition1.getData().add(new XYChart.Data("Feb", 35));
+        foodcondition1.getData().add(new XYChart.Data("Mar", 36));
+        foodcondition1.getData().add(new XYChart.Data("Apr", 33));
+        foodcondition1.getData().add(new XYChart.Data("May", 31));
+        foodcondition1.getData().add(new XYChart.Data("Jun", 26));
+        foodcondition1.getData().add(new XYChart.Data("Jul", 22));
+        foodcondition1.getData().add(new XYChart.Data("Aug", 25));
+        foodcondition1.getData().add(new XYChart.Data("Sep", 43));
+        foodcondition1.getData().add(new XYChart.Data("Oct", 44));
+        foodcondition1.getData().add(new XYChart.Data("Nov", 45));
+        foodcondition1.getData().add(new XYChart.Data("Dec", 44));
+
+        lineChart.getData().addAll(sleep1, exercise1, foodcondition1);
+
+        //important Root element for VBox
+        rootPane.getChildren().addAll(navigationbar, grid, barchart, lineChart); 
+        
+        // important Root element for BorderPane
+        //rootPane.setLeft(grid);
+        //rootPane.setRight(bc);
+        //rootPane.setRight(lineChart);
+        
+        // show the stage   
+        Scene scene = new Scene(rootPane);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+}
