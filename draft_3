@@ -7,8 +7,10 @@ package fitnessreport;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.control.Button;
@@ -26,7 +28,9 @@ import javafx.stage.Stage;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.BorderPane;
 
 /**
  *
@@ -48,6 +52,9 @@ public class Fitnessreport extends Application {
     final static String deadlift = "Deadlift";
     final static String ohp = "Overhead Press";
     final static String militarypress = "Military Press";
+    
+    // create scrollBar
+    final ScrollBar sc = new ScrollBar();
 
     @Override
     public void start(Stage primaryStage) {
@@ -58,17 +65,21 @@ public class Fitnessreport extends Application {
         // root element
         VBox rootPane = new VBox();
         
+        // add scroll bar
+        //ScrollBar s1 = new ScrollBar();
+        //s1.setOrientation(Orientation.VERTICAL);
+ 
         // set grid pane (navigation)
         GridPane navigationbar = new GridPane();
         navigationbar.setHgap(10);
-        navigationbar.setVgap(10);
+        navigationbar.setVgap(0);
 
         // set grid pane (fitness analysis + comments)
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(5);
         grid.setVgap(5);
-        grid.setPadding(new Insets(25, 25, 25, 25));
+        grid.setPadding(new Insets(20, 20, 20, 20));
 
         // navigation grid - buttons
         Button homeBar = new Button("Home");
@@ -148,33 +159,22 @@ public class Fitnessreport extends Application {
         String healthComments = healthExpertBox.getText();
         
         // (+) button for expert comments
-         /*
-        int num_comments = 2;
-        for (int i = 1; i < num_comments; i++) {
-            grid.add(new Label (""+i), 0, i);
-            grid.add( new TextField(), 1, i);
-            grid.add( new TextField(), 2, i);
-        }
-        
+      
         Button addComments = new Button ("+ comments");
-        grid.add(addComments, 0, num_comments);
-
         
-        //addComments.setAlignment(Pos.BOTTOM_RIGHT);
+        grid.add(addComments, 0, 10);
         
         addComments.setOnAction (e -> {
             int row = grid.getRowIndex(addComments) + 1;
+            grid.add(addComments, 0, row);
             
-            
-            
-            // add rows of text fields
             row--;
             grid.add(new Label("" + row), 0, row);
             grid.add(new TextField(), 1, row);
             grid.add(new TextField(), 2, row);
         
         });
-        */
+
         //background colors
         grid.setStyle("-fx-background-color: gold;");
         
@@ -268,16 +268,61 @@ public class Fitnessreport extends Application {
         foodcondition1.getData().add(new XYChart.Data("Dec", 44));
 
         lineChart.getData().addAll(sleep1, exercise1, foodcondition1);
+        
+        // chart 3
+        final NumberAxis xAxis2 = new NumberAxis(1, 30, 1);
+        final NumberAxis yAxis2 = new NumberAxis();
+        final AreaChart<Number,Number> areaChart = 
+            new AreaChart<Number,Number>(xAxis2,yAxis2);
+        areaChart.setTitle("Benchmarking Actual vs Goals "
+                + "(average step in a month)");
+        
+        xAxis2.setLabel("Days");
+        yAxis2.setLabel("Steps");
+
+        XYChart.Series actual2 = new XYChart.Series();
+        actual2.setName("Steps Per Month");
+
+        XYChart.Series seriesJanuary= new XYChart.Series();
+        seriesJanuary.setName("Actual");
+        seriesJanuary.getData().add(new XYChart.Data(1, 4000));
+        seriesJanuary.getData().add(new XYChart.Data(2, 10000));
+        seriesJanuary.getData().add(new XYChart.Data(5, 15000));
+        seriesJanuary.getData().add(new XYChart.Data(8, 8000));
+        seriesJanuary.getData().add(new XYChart.Data(11, 5000));
+        seriesJanuary.getData().add(new XYChart.Data(14, 18000));
+        seriesJanuary.getData().add(new XYChart.Data(17, 15000));
+        seriesJanuary.getData().add(new XYChart.Data(23, 13000));
+        seriesJanuary.getData().add(new XYChart.Data(24, 19000));
+        seriesJanuary.getData().add(new XYChart.Data(25, 21000));
+        seriesJanuary.getData().add(new XYChart.Data(30, 21000));
+        
+        XYChart.Series seriesFebruary = new XYChart.Series();
+        seriesFebruary.setName("Goals");
+        seriesFebruary.getData().add(new XYChart.Data(1, 14000));
+        seriesFebruary.getData().add(new XYChart.Data(3, 17000));
+        seriesFebruary.getData().add(new XYChart.Data(6, 17000));
+        seriesFebruary.getData().add(new XYChart.Data(10, 13000));
+        seriesFebruary.getData().add(new XYChart.Data(12, 15000));
+        seriesFebruary.getData().add(new XYChart.Data(16, 17000));
+        seriesFebruary.getData().add(new XYChart.Data(18, 22000));
+        seriesFebruary.getData().add(new XYChart.Data(20, 2300));
+        seriesFebruary.getData().add(new XYChart.Data(22, 24000));
+        seriesFebruary.getData().add(new XYChart.Data(26, 26000));
+        seriesFebruary.getData().add(new XYChart.Data(30, 27000));
+
+        areaChart.getData().addAll(seriesJanuary, seriesFebruary);
 
         //important Root element for VBox
-        rootPane.getChildren().addAll(navigationbar, grid, barchart, lineChart);
+        rootPane.getChildren().addAll(navigationbar, grid, barchart, lineChart, 
+                areaChart);
 
         // important Root element for BorderPane
         //rootPane.setLeft(grid);
         //rootPane.setRight(bc);
         //rootPane.setRight(lineChart);
         // show the stage   
-        Scene scene = new Scene(rootPane, 1000, 1000);
+        Scene scene = new Scene(rootPane, 1000, 1200);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
